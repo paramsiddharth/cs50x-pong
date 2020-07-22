@@ -30,6 +30,10 @@ function love.load()
         ['wall_hit'] = love.audio.newSource('wall_hit.wav', 'static')
     }
 
+    music = love.audio.newSource('music.wav', 'static')
+    music:setLooping(true)
+    music:play()
+
     player1score = 0
     player2score = 0
 
