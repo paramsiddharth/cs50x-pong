@@ -55,9 +55,13 @@ function love.load()
         {
             fullscreen = false,
             vsync = true,
-            resizable = false
+            resizable = true
         }
     )
+end
+
+function love.resize(w, h)
+    push:resize(w, h)
 end
 
 function love.update(dt)
