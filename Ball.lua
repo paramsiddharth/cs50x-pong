@@ -6,7 +6,7 @@ function Ball:init(x, y, width, height)
 	self.width = width
 	self.height = height
 
-	self.dx = math.random(2) == 1 and -100 or 100
+	self.dx = math.random(2) == 1 and -PADDLE_SPEED or PADDLE_SPEED
     self.dy = math.random(-50, 50)
 end
 

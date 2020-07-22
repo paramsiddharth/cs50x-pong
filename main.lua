@@ -3,7 +3,7 @@ WINDOW_HEIGHT = 720
 
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
-PADDLE_SPEED = 200
+PADDLE_SPEED = 100
 
 Class = require 'class'
 push = require 'push'
@@ -33,6 +33,8 @@ function love.load()
         VIRTUAL_HEIGHT / 2 - 2,
         5, 5
     )
+
+    servingPlayer = ball.dx > 0 and 1 or 2
 
     gameState = 'start'
 
@@ -68,14 +70,18 @@ function love.update(dt)
 
     if ball.x <= 0 then
         player2score = player2score + 1
+        servingPlayer = 1
         ball:reset()
-        gameState = 'start'
+        ball.dx = PADDLE_SPEED
+        gameState = 'serve'
     end
 
     if ball.x + ball.width >= VIRTUAL_WIDTH then
         player1score = player1score + 1
+        servingPlayer = 2
         ball:reset()
-        gameState = 'start'
+        ball.dx = -PADDLE_SPEED
+        gameState = 'serve'
     end 
 
     paddle1:update(dt)
@@ -104,8 +110,10 @@ end
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
-    elseif key == 'enter' or key == 'return' then
+    elseif key == 'space' then
         if gameState == 'start' then
+            gameState = 'serve'
+        elseif gameState == 'serve' then
             gameState = 'play'
         end
     end
@@ -123,8 +131,14 @@ function love.draw()
 
     love.graphics.setFont(smallFont)
 
-    love.graphics.printf("Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
-    
+    if gameState == 'start' then
+        love.graphics.printf("Pong", 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf("Press Space to play...", 0, 32, VIRTUAL_WIDTH, 'center')
+    elseif gameState == 'serve' then
+        love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn", 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf("Press Space to serve...", 0, 32, VIRTUAL_WIDTH, 'center')
+    end
+
     love.graphics.setFont(scoreFont)
     love.graphics.print(player1score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
     love.graphics.print(player2score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
