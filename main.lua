@@ -61,10 +61,22 @@ function love.update(dt)
         ball.y = 0
     end
 
-    if ball.y >= VIRTUAL_HEIGHT - 5 then
+    if ball.y >= VIRTUAL_HEIGHT - ball.height then
         ball.dy = -ball.dy
-        ball.y = VIRTUAL_HEIGHT - 5
+        ball.y = VIRTUAL_HEIGHT - ball.height
     end
+
+    if ball.x <= 0 then
+        player2score = player2score + 1
+        ball:reset()
+        gameState = 'start'
+    end
+
+    if ball.x + ball.width >= VIRTUAL_WIDTH then
+        player1score = player1score + 1
+        ball:reset()
+        gameState = 'start'
+    end 
 
     paddle1:update(dt)
     paddle2:update(dt)
@@ -95,10 +107,6 @@ function love.keypressed(key)
     elseif key == 'enter' or key == 'return' then
         if gameState == 'start' then
             gameState = 'play'
-        elseif gameState == 'play' then
-            gameState = 'start'
-
-            ball:reset()
         end
     end
 end
