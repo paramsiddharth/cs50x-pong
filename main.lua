@@ -16,6 +16,8 @@ function love.load()
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    love.window.setTitle('Pong')
+
     smallFont = love.graphics.newFont('font.ttf', 8)
 
     scoreFont = love.graphics.newFont('font.ttf', 32)
@@ -48,6 +50,22 @@ function love.load()
 end
 
 function love.update(dt)
+    if gameState == 'play' then
+
+    if ball:collides(paddle1) or ball:collides(paddle2) then
+        ball.dx = -ball.dx
+    end
+
+    if ball.y <= 0 then
+        ball.dy = -ball.dy
+        ball.y = 0
+    end
+
+    if ball.y >= VIRTUAL_HEIGHT - 5 then
+        ball.dy = -ball.dy
+        ball.y = VIRTUAL_HEIGHT - 5
+    end
+
     paddle1:update(dt)
     paddle2:update(dt)
 
@@ -67,7 +85,6 @@ function love.update(dt)
         paddle2.dy = 0
     end
 
-    if gameState == 'play' then
         ball:update(dt)
     end
 end
@@ -98,11 +115,7 @@ function love.draw()
 
     love.graphics.setFont(smallFont)
 
-    if gameState == 'start' then
-        love.graphics.printf("Hello Start State!", 0, 20, VIRTUAL_WIDTH, 'center')
-    elseif gameState == 'play' then
-        love.graphics.printf("Hello Play State!", 0, 20, VIRTUAL_WIDTH, 'center')
-    end
+    love.graphics.printf("Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
     
     love.graphics.setFont(scoreFont)
     love.graphics.print(player1score, VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
